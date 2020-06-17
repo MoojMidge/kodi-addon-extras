@@ -38,7 +38,7 @@ def browse():
         xbmcplugin.endOfDirectory(plugin.handle, succeeded=False)
         return
 
-    current_path = args['path'][0]
+    current_path = args['path'][0].decode('utf-8')
     if not current_path.endswith('/'):
         current_path += '/'
 
@@ -49,28 +49,28 @@ def browse():
 
     for name in dirs:
         li = ListItem(name)
+        path = os.path.join(current_path, name.decode('utf-8'))
+        params = {
+            b'path': path.encode('utf-8'),
+            b'title': args['title'][0].encode('utf-8')
+        }
         if 'fanart' in args:
             li.setArt({'fanart': args['fanart'][0]})
-        path = os.path.join(current_path, name)
-        params = {
-            b'path': path,
-            b'title': args['title'][0],
-            b'fanart': args['fanart'][0],
-        }
-        url = 'plugin://context.item.extras/?' + urlencode(params)
+            params.update({b'fanart':args['fanart'][0]})
+        url = 'plugin://script.extras/?' + urlencode(params)
         xbmcplugin.addDirectoryItem(plugin.handle, url, li, isFolder=True)
 
     for name in files:
         li = ListItem(name)
         if 'fanart' in args:
             li.setArt({'fanart': args['fanart'][0]})
-        url = os.path.join(current_path, name)
+        url = os.path.join(current_path, name.decode('utf-8'))
         xbmcplugin.addDirectoryItem(plugin.handle, url, li, isFolder=False)
 
     if 'isroot' in args:
         li = ListItem("Search on Youtube")
         li.setProperty("specialsort", "bottom")
-        url = plugin.url_for(youtube, q=args['title'][0] + ' Extras')
+        url = plugin.url_for(youtube, q=args['title'][0].encode('utf-8') + ' Extras')
         xbmcplugin.addDirectoryItem(plugin.handle, url, li, isFolder=True)
 
     xbmcplugin.addSortMethod(plugin.handle, xbmcplugin.SORT_METHOD_LABEL)
