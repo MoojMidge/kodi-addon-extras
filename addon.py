@@ -25,18 +25,18 @@ from urllib import urlencode
 
 def main():
     addon = xbmcaddon.Addon()
-    item_path = sys.listitem.getVideoInfoTag().getPath()
+    item_path = xbmc.getInfoLabel('ListItem.Path').decode('utf-8')
     if not item_path:
         return
 
-    extras_dir = os.path.join(item_path, addon.getSetting('extras-folder'))
+    extras_dir = os.path.join(item_path, addon.getSetting('extras-folder').decode('utf-8'))
     xbmc.log("[%s] opening '%s'" % (addon.getAddonInfo('id'), extras_dir), xbmc.LOGDEBUG)
 
     params = {
         'path': extras_dir,
         'isroot': 'true',
-        'title': sys.listitem.getLabel(),
-        'fanart': sys.listitem.getProperty('fanart_image'),
+        'title': xbmc.getInfoLabel('ListItem.Title').decode('utf-8'),
+        'fanart': xbmc.getInfoLabel('ListItem.Art(fanart)')
     }
     plugin_url = "plugin://context.item.extras/?" + urlencode(params)
 
