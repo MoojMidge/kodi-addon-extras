@@ -57,7 +57,7 @@ def browse():
         if 'fanart' in args:
             li.setArt({'fanart': args['fanart'][0]})
             params.update({b'fanart':args['fanart'][0]})
-        url = 'plugin://script.extras/?' + urlencode(params)
+        url = 'plugin://context.item.extras/?' + urlencode(params)
         xbmcplugin.addDirectoryItem(plugin.handle, url, li, isFolder=True)
 
     for name in files:
@@ -67,7 +67,7 @@ def browse():
         url = os.path.join(current_path, name.decode('utf-8'))
         xbmcplugin.addDirectoryItem(plugin.handle, url, li, isFolder=False)
 
-    if 'isroot' in args:
+    if 'isroot' in args and 'title' in args:
         li = ListItem("Search on Youtube")
         li.setProperty("specialsort", "bottom")
         url = plugin.url_for(youtube, q=args['title'][0].encode('utf-8') + ' Extras')
